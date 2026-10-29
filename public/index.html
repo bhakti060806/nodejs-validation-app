@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Server-Side Validation App</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="card">
+  <h1>User Registration</h1>
+  <p class="sub">All validation is performed on the NodeJS server.</p>
+  <div id="form">
+    <label>Full name</label><input id="name"><div class="err" id="e-name"></div>
+    <label>Email</label><input id="email"><div class="err" id="e-email"></div>
+    <label>Phone</label><input id="phone"><div class="err" id="e-phone"></div>
+    <label>Age</label><input id="age"><div class="err" id="e-age"></div>
+    <label>Course</label>
+    <select id="course">
+      <option value="">-- select --</option>
+      <option>Computer Engineering</option><option>IT</option><option>AI &amp; DS</option><option>Mechanical</option><option>Electronics</option>
+    </select><div class="err" id="e-course"></div>
+    <label>Password</label><input id="password" type="password"><div class="err" id="e-password"></div>
+    <label>Confirm password</label><input id="confirmPassword" type="password"><div class="err" id="e-confirmPassword"></div>
+    <button id="submit">Register</button>
+  </div>
+  <div id="result"></div>
+  <div class="links">
+    <a href="/api/health" target="_blank">Health</a>
+    <a href="/api/users" target="_blank">Users (JSON)</a>
+    <a href="/api/users/export">Export CSV</a>
+    <a href="/api/logs" target="_blank">Server log</a>
+  </div>
+</div>
+<script>
+const fields = ['name','email','phone','age','course','password','confirmPassword'];
+document.getElementById('submit').addEventListener('click', async () => {
+  fields.forEach(f => document.getElementById('e-' + f).textContent = '');
+  const payload = {};
+  fields.forEach(f => payload[f] = document.getElementById(f).value);
+  const box = document.getElementById('result');
+  try {
+    const res = await fetch('/api/register', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+    const data = await res.json();
+    box.style.display = 'block';
+    box.className = res.ok ? 'ok' : 'bad';
+    box.textContent = 'HTTP ' + res.status + ' - ' + data.message;
+    if (data.errors) Object.entries(data.errors).forEach(([k, v]) => { const el = document.getElementById('e-' + k); if (el) el.textContent = v; });
+  } catch (e) { box.style.display = 'block'; box.className = 'bad'; box.textContent = 'Network error'; }
+});
+</script>
+</body>
+</html>

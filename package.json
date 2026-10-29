@@ -1,0 +1,12 @@
+{
+  "name": "server-side-validation-app",
+  "version": "1.0.0",
+  "description": "Server-Side Validation Application using NodeJS core modules (http, fs, events, streams, crypto)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test/run-tests.js"
+  },
+  "engines": { "node": ">=18" },
+  "license": "ISC"
+}

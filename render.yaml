@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: server-side-validation-app
+    runtime: node
+    plan: free
+    buildCommand: ""
+    startCommand: node server.js
